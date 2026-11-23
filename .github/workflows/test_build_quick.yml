@@ -9,45 +9,49 @@ on:
     # For now, there's nothing in the following directories that we're actually checking.
     paths-ignore: [ 'distribution/**', 'doc/**', 'source-doc/**' ]
 
+permissions:
+  contents: read
+
 jobs:
   build_unix:
     name: 'Unix Build Test'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
 
     - name: 'Check out Repository'
-      uses: actions/checkout@v2
+      uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2
 
     - name: 'Install Prerequisites'
-      uses: POV-Ray/povray/.github/actions/unix_getlibs@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/unix_getlibs@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
 
     - name: 'Prebuild'
-      uses: POV-Ray/povray/.github/actions/unix_prebuild@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/unix_prebuild@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
     - name: 'Sanity-Check Working Tree'
-      uses: POV-Ray/povray/.github/actions/git_check_repo@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_check_repo@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
 
     - name: 'Configure'
-      uses: POV-Ray/povray/.github/actions/unix_configure@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/unix_configure@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
     - name: 'Sanity-Check Working Tree'
-      uses: POV-Ray/povray/.github/actions/git_check_repo@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_check_repo@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
 
     - name: 'Bundle Artifacts for Diagnostics'
       if: ${{ always() }}
-      uses: POV-Ray/povray/.github/actions/git_bundle_ignored@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_bundle_ignored@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
       with:
         name: artifact_diag_unix.tar.gz
 
     - name: 'Build'
-      uses: POV-Ray/povray/.github/actions/unix_make@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/unix_make@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
     - name: 'Sanity-Check Working Tree'
-      uses: POV-Ray/povray/.github/actions/git_check_repo@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_check_repo@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
 
     - name: 'Check Functionality'
-      uses: POV-Ray/povray/.github/actions/unix_make@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/unix_make@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
       with:
         make-target: check
     - name: 'Sanity-Check Working Tree'
-      uses: POV-Ray/povray/.github/actions/git_check_repo@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_check_repo@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
 
 #    - name: 'Install'
 #      uses: POV-Ray/povray/.github/actions/unix_make@gh-actions-v1
@@ -58,7 +62,7 @@ jobs:
 
     - name: 'Upload Artifacts for Diagnostics'
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2
       with:
         name: artifact_diag_unix
         path: artifact_diag_unix.tar.gz
@@ -67,17 +71,18 @@ jobs:
 
   build_windows:
     name: 'Windows Build Test'
-    runs-on: windows-latest
+    runs-on: windows-2022
+    timeout-minutes: 60
     steps:
 
     - name: 'Check out Repository'
-      uses: actions/checkout@v2
+      uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2
 
     - name: 'Add MSBuild to PATH'
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@c26a08ba26249b81327e26f6ef381897b6a8754d # v1.0.2
 
     - name: 'Build'
-      uses: POV-Ray/povray/.github/actions/windows_build@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/windows_build@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
       with:
         pov-ray-build-id: gh${{github.run_number}}
         solution: vs2015
@@ -86,4 +91,4 @@ jobs:
         toolset: v142
         msbuild-options: ''
     - name: 'Sanity-Check Working Tree'
-      uses: POV-Ray/povray/.github/actions/git_check_repo@gh-actions-v1
+      uses: POV-Ray/povray/.github/actions/git_check_repo@1cd27888681e8dd5d9b3cb29137e478c9ff77927 # gh-actions-v1
